@@ -9,6 +9,7 @@
 """
 
 import time
+import sys
 
 class AbusolutelyTimer(object):
 
@@ -16,16 +17,22 @@ class AbusolutelyTimer(object):
 		self.__sleep_second = sleep_second
 		self.last_wake = 0
 
+	def __get_time(self):
+		if sys.platform == 'win32':
+			return time.clock()
+		else:
+			return time.time()
+		
 	def sleep(self):
 		last_wake = self.last_wake
-		now = time.time()
+		now = self.__get_time()
 		if last_wake:
 			delay = now - last_wake
 			if self.__sleep_second > delay:
 				time.sleep(self.__sleep_second - delay)
 		else:
 			time.sleep(self.__sleep_second)
-		self.last_wake = time.time()
+		self.last_wake = self.__get_time()
 		return now
 
 
