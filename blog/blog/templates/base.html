@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>a moe</title>
+		<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.2.min.js"></script>
+	</head>
+	<body>
+		<input type="text" class="try" />
+		<script type="text/javascript">
+			;(function($) {
+				$.fn.place_holder = function(option){
+					var settings = {
+						color: '#aaa',
+						content: "我是占位符哟",
+						}
+					var $me = $(this), $holder;
+					option = option|| {};
+					option = $.extend(settings, option);
+					$me.blur(function(){
+						$me.css('color', option.color).val(option.content);
+						});
+					$me.focus(function(){
+						$me.css('color','normal').val('');
+						});
+					$me.blur();
+				}
+			})(jQuery);
+			$('.try').place_holder({});
+		</script>
+	</body>
+</html>

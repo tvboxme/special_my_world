@@ -1,0 +1,6 @@
+<uwsgi> 
+	<master>true</master> 
+	<socket>127.0.0.1:7456</socket> 
+	<pythonpath>..</pythonpath> 
+	<module>blog.wsgi</module> 
+</uwsgi>
