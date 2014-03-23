@@ -11,7 +11,7 @@
 import time
 import sys
 
-class AbusolutelyTimer(object):
+class AbsolutelyTimer(object):
 
 	def __init__(self, sleep_second):
 		self.__sleep_second = sleep_second
@@ -37,10 +37,10 @@ class AbusolutelyTimer(object):
 
 
 
-def test_abusolutely_timer():
+def test_absolutely_timer():
 	sleep = 1
 	time_list = []
-	timer = AbusolutelyTimer(sleep)
+	timer = AbsolutelyTimer(sleep)
 	for i in range(20):
 		time_list.append(time.time())
 		timer.sleep()
@@ -52,4 +52,4 @@ def test_abusolutely_timer():
 	print 'avg:', (time_list[-1] - time_list[0]) / 20
 
 if "__main__" == __name__:
-	test_abusolutely_timer()
+	test_absolutely_timer()
