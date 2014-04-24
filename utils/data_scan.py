@@ -18,6 +18,8 @@ date_fmt = '%Y-%m-%d %H:%M:%S'
 
 class paged_scan(object):
     '''  scan mongodb with recounnection.
+    debug for test callback
+    start for start record count
     '''
 
     def __init__(self, collection, query={}, pagination_by=200, reverse=False, callback=None):
@@ -36,15 +38,18 @@ class paged_scan(object):
         return decorator
 
     def auto_reconnect(self, func, *args, **kwargs):
+        debug = kwargs.get('debug', False)
+        start = kwargs.get('start', 0)
         start_time = datetime.datetime.now()
         collection = self.collection
         pagination_by = self.pagination_by
         print 'start scan %s at %s' % (collection.full_name, start_time.strftime(date_fmt))
         total_count = collection.count()
         print 'all count: %s' % total_count
+        min_page = start / pagination_by
         max_page = total_count / pagination_by + 1
         trans_data = {}
-        for page in range(max_page):
+        for page in range(min_page, max_page):
             print 'start new cursor skipping %s ************************ %s' % (
                     pagination_by * page, datetime.datetime.now().strftime(date_fmt))
             cursor = (collection.find(self.query)
@@ -57,7 +62,9 @@ class paged_scan(object):
                     func(data, trans_data, * args, **kwargs)
                 except Exception:
                     break
-            self.descrip_result(trans_data)
+            has_data = self.descrip_result(trans_data)
+            if debug and has_data:
+                break
         end_time = datetime.datetime.now()
         print 'finish scan %s at %s' % (collection.full_name, end_time.strftime(date_fmt))
         print 'duration %s' % (end_time - start_time)
@@ -68,7 +75,10 @@ class paged_scan(object):
             self.descrip_result(trans_data)
 
     def descrip_result(self, trans_data, detail=False):
+        has_data = {}
         for key, value in trans_data.items():
+            if value:
+                has_data[key] = True
             if isinstance(value, (list, )):
                 print '%s(list length: %s)' % (key, len(value))
             elif isinstance(value, (dict, )):
@@ -79,3 +89,4 @@ class paged_scan(object):
                 print '%s(%s)' % (key, type(value))
             if detail:
                 pprint(value)
+        return has_data
