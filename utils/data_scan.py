@@ -46,7 +46,7 @@ class paged_scan(object):
         trans_data = {}
         for page in range(max_page):
             print 'start new cursor skipping %s ************************ %s' % (
-                    pagination_by * page, datetime.datetime.now.strftime(date_fmt))
+                    pagination_by * page, datetime.datetime.now().strftime(date_fmt))
             cursor = (collection.find(self.query)
                     .skip(pagination_by * page)
                     .limit(pagination_by)
